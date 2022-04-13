@@ -20,6 +20,10 @@ runs:
     - name: Install Beaker client
       shell: bash
       run: |
+        set -e
+        set pipefail
+        set -x
+
         mkdir -p "$HOME/bin"
 
         # Download and install from latest GitHub release.
@@ -36,7 +40,10 @@ runs:
       id: configure-beaker-client
       shell: bash
       run: |
+        set -e
+        set pipefail
         set -x
+
         beaker config set user_token ${{ inputs.token }}
 
         if [[ ! -z "${{ inputs.workspace }}" ]]; then
