@@ -54,7 +54,6 @@ jobs:
         uses: ./
         with:
           token: ${{ secrets.BEAKER_TOKEN }}
-          workspace: ${{ env.BEAKER_WORKSPACE }}
 
       - name: Test
         run: |
