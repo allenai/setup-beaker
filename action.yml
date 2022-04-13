@@ -50,7 +50,7 @@ runs:
         beaker config test > /dev/null
 
         # Setup 'account' output.
-        account=beaker account whoami --format=json | jq -r '.[0].name'
+        account=$(beaker account whoami --format=json | jq -r '.[0].name')
         echo "::set-output name=account::$account"
 
     - name: Print useful config info
