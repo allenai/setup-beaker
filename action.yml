@@ -8,7 +8,7 @@ inputs:
     description: Your Beaker token
     required: true
   workspace:
-    description: Set the default workspace to use
+    description: The default workspace to use
     required: false
 outputs:
   account:
@@ -36,6 +36,7 @@ runs:
       id: configure-beaker-client
       shell: bash
       run: |
+        set -x
         beaker config set user_token ${{ inputs.token }}
 
         if [[ ! -z "${{ inputs.workspace }}" ]]; then
