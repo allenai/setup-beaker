@@ -18,6 +18,7 @@ env:
   # Change this to invalidate existing cache.
   CACHE_PREFIX: v0
   PYTHON_PATH: ./
+  BEAKER_WORKSPACE: ai2/petew-testing
 
 jobs:
   test_action:
@@ -31,7 +32,7 @@ jobs:
           - name: with workspace
             workspace: true
             test: |
-              beaker config list | grep "default_workspace = ${{ env.BEAKER_WORKSPACE }}"
+              beaker config list | grep "default_workspace = $BEAKER_WORKSPACE"
 
           - name: no workspace
             workspace: false
