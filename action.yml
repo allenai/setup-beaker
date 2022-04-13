@@ -20,9 +20,7 @@ runs:
     - name: Install Beaker client
       shell: bash
       run: |
-        set -e
-        set pipefail
-        set -x
+        set -euxo pipefail
 
         mkdir -p "$HOME/bin"
 
@@ -40,9 +38,7 @@ runs:
       id: configure-beaker-client
       shell: bash
       run: |
-        set -e
-        set pipefail
-        set -x
+        set -euxo pipefail
 
         beaker config set user_token ${{ inputs.token }}
 
@@ -54,4 +50,4 @@ runs:
         beaker config test
 
         # Setup 'account' output.
-        echo "::set-output name=account::$(beaker account whoami --format=json | jq '.[0]' name)"
+        echo "::set-output name=account::$(beaker account whoami --format=json | jq '.[0].name')"
