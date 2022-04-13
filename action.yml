@@ -29,7 +29,7 @@ runs:
           | grep 'browser_download_url.*linux' \
           | cut -d '"' -f 4 \
           | wget -qi - \
-        && tar -xvzf beaker_linux.tar.gz -C "$HOME/bin"
+        && tar -xvzf beaker_linux.tar.gz -C "$HOME/bin" > /dev/null
 
         # Add to path.
         echo "$HOME/bin" >> "$GITHUB_PATH"
@@ -56,4 +56,6 @@ runs:
     - name: Print useful config info
       shell: bash
       run: |
+        set -euo pipefail
+        beaker --version
         echo "Authenticated as: '${{ steps.configure-beaker-client.outputs.account }}'"
