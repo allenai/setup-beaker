@@ -22,7 +22,7 @@ The name of the authenticated Beaker account.
 
 ```yaml
 - name: Setup Beaker
-  uses: allenai/setup-beaker@v0
+  uses: allenai/setup-beaker@v1
   with:
     token: ${{ secrets.BEAKER_TOKEN }}
     workspace: ai2/beaker-testing
