@@ -1,0 +1,49 @@
+name: setup-beaker
+description: Set up the Beaker command-line client
+branding:
+  icon: package
+  color: blue
+inputs:
+  token:
+    description: Your Beaker token
+    required: true
+  workspace:
+    description: Set the default workspace to use
+    required: false
+outputs:
+  account:
+    description: The name of the authenticated Beaker account
+    value: ${{ steps.configure-beaker-client.outputs.account }}
+runs:
+  using: composite 
+  steps:
+    - name: Install Beaker client
+      shell: bash
+      run: |
+        mkdir -p "$HOME/bin"
+
+        # Download and install from latest GitHub release.
+        curl -s https://api.github.com/repos/allenai/beaker/releases/latest \
+          | grep 'browser_download_url.*linux' \
+          | cut -d '"' -f 4 \
+          | wget -qi - \
+        && tar -xvzf beaker_linux.tar.gz -C "$HOME/bin"
+
+        # Add to path.
+        echo "$HOME/bin" >> "$GITHUB_PATH"
+
+    - name: Configure Beaker client
+      id: configure-beaker-client
+      shell: bash
+      run: |
+        beaker config set user_token ${{ inputs.token }}
+
+        if [[ ! -z "${{ inputs.workspace }}" ]]; then
+          beaker config set default_workspace ${{ inputs.workspace }}
+        fi
+
+        # Validate config.
+        beaker config test
+
+        # Setup 'account' output.
+        echo "::set-output name=account::$(beaker account whoami --format=json | jq '.[0]' name)"
