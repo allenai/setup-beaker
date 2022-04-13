@@ -8,7 +8,7 @@ inputs:
     description: Your Beaker token
     required: true
   workspace:
-    description: Set the default workspace to use
+    description: The default workspace to use
     required: false
 outputs:
   account:
@@ -20,6 +20,8 @@ runs:
     - name: Install Beaker client
       shell: bash
       run: |
+        set -euo pipefail
+
         mkdir -p "$HOME/bin"
 
         # Download and install from latest GitHub release.
@@ -27,7 +29,7 @@ runs:
           | grep 'browser_download_url.*linux' \
           | cut -d '"' -f 4 \
           | wget -qi - \
-        && tar -xvzf beaker_linux.tar.gz -C "$HOME/bin"
+        && tar -xvzf beaker_linux.tar.gz -C "$HOME/bin" > /dev/null
 
         # Add to path.
         echo "$HOME/bin" >> "$GITHUB_PATH"
@@ -36,6 +38,8 @@ runs:
       id: configure-beaker-client
       shell: bash
       run: |
+        set -euo pipefail
+
         beaker config set user_token ${{ inputs.token }}
 
         if [[ ! -z "${{ inputs.workspace }}" ]]; then
@@ -43,7 +47,15 @@ runs:
         fi
 
         # Validate config.
-        beaker config test
+        beaker config test > /dev/null
 
         # Setup 'account' output.
-        echo "::set-output name=account::$(beaker account whoami --format=json | jq '.[0]' name)"
+        account=$(beaker account whoami --format=json | jq -r '.[0].name')
+        echo "::set-output name=account::$account"
+
+    - name: Print useful config info
+      shell: bash
+      run: |
+        set -euo pipefail
+        beaker --version
+        echo "Authenticated as: '${{ steps.configure-beaker-client.outputs.account }}'"
