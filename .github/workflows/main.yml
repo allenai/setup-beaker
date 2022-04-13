@@ -50,10 +50,16 @@ jobs:
           workspace: ${{ env.BEAKER_WORKSPACE }}
 
       - name: Setup Beaker (no workspace)
+        id: setup-beaker
         if: '!matrix.task.workspace'
         uses: ./
         with:
           token: ${{ secrets.BEAKER_TOKEN }}
+
+      - name: Check account output
+        shell: bash
+        run: |
+          echo "${{ steps.setup-beaker.outputs.account }}"
 
       - name: Test
         run: |
