@@ -62,7 +62,7 @@ runs:
         # Download the release.
         mkdir $TMP/assets/
         gh --repo allenai/beaker-service release download -p $PATTERN -D $TMP/assets/ $VERSION
-        tar -C $HOME/bin -zxf $TMP/assets/*.tar.gz beaker
+        tar -C $HOME/bin -zxf $TMP/assets/*.tar.gz
 
         # Add to path.
         echo "$HOME/bin" >> "$GITHUB_PATH"
