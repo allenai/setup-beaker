@@ -48,7 +48,7 @@ jobs:
         with:
           token: ${{ secrets.BEAKER_TOKEN }}
           workspace: ${{ env.BEAKER_WORKSPACE }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GH_TOKEN }}
 
       - name: Setup Beaker (no workspace)
         id: setup-beaker
@@ -56,7 +56,7 @@ jobs:
         uses: ./
         with:
           token: ${{ secrets.BEAKER_TOKEN }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GH_TOKEN }}
 
       - name: Check account output
         shell: bash
