@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Updated for new Beaker release process. Input `github_token` is now required.
+
 ## [v1.0.0](https://github.com/allenai/setup-beaker/releases/tag/v1.0.0) - 2022-04-13
 
 ### Added
