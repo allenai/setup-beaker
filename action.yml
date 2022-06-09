@@ -24,12 +24,40 @@ runs:
 
         mkdir -p "$HOME/bin"
 
-        # Download and install from latest GitHub release.
-        curl -s https://api.github.com/repos/allenai/beaker/releases/latest \
-          | grep 'browser_download_url.*linux' \
-          | cut -d '"' -f 4 \
-          | wget -qi - \
-        && tar -xvzf beaker_linux.tar.gz -C "$HOME/bin" > /dev/null
+        # Find available versions.
+        echo "Available Beaker versions:"
+        echo
+        gh api /repos/allenai/beaker-service/deployments | jq -cr '[.[] | select(.production_environment)][] | [.ref, .created_at] | @tsv' > $TMP/beaker-versions.txt
+        cat $TMP/beaker-versions.txt | awk '{printf("%-15s %s\n", $1, $2)}'
+
+        VERSION=$(head -1 $TMP/beaker-versions.txt | awk '{print $1}')
+        echo "Downloading Beaker CLI version $VERSION."
+        echo
+
+        ARCH=$(uname -p)
+        OS=$(uname -s)
+        
+        # Detect architecture and OS.
+        if [[ $ARCH == "arm" && $OS == "Darwin" ]]; then
+          # macOS on M1 chipsets
+          PATTERN='beaker-cli-darwin-arm64-v*.tar.gz'
+        elif [[ $ARCH == "i386" && $OS == "Darwin" ]]; then
+          # macOS on Intel chipsets
+          PATTERN='beaker-cli-darwin-amd64-v*.tar.gz'
+        elif [[ $ARCH == "x86_64" && $OS == "Linux" ]]; then
+          # Linux on AMD64 chipsets
+          PATTERN='beaker-cli-linux-amd64-v*.tar.gz'
+        else
+          echo "Unrecognized OS-Architecture combination:"
+          echo "ARCH=$ARCH"
+          echo "OS=$OS"
+          exit 1
+        fi
+
+        # Download the release.
+        mkdir $TMP/assets/
+        gh --repo allenai/beaker-service release download -p $PATTERN -D $TMP/assets/ $VERSION
+        tar -C $HOME/bin -zxf $TMP/assets/*.tar.gz beaker
 
         # Add to path.
         echo "$HOME/bin" >> "$GITHUB_PATH"
