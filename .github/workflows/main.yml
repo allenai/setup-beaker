@@ -43,6 +43,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Setup Beaker (with workspace)
+        id: setup-beaker-w-workspace
         if: matrix.task.workspace
         uses: ./
         with:
@@ -58,7 +59,14 @@ jobs:
           token: ${{ secrets.BEAKER_TOKEN }}
           github_token: ${{ secrets.GH_TOKEN }}
 
-      - name: Check account output
+      - name: Check account output (with workspace)
+        if: matrix.task.workspace
+        shell: bash
+        run: |
+          echo "${{ steps.setup-beaker-w-workspace.outputs.account }}"
+
+      - name: Check account output (no workspace)
+        if: '!matrix.task.workspace'
         shell: bash
         run: |
           echo "${{ steps.setup-beaker.outputs.account }}"
