@@ -25,6 +25,8 @@ runs:
         mkdir -p "$HOME/bin"
         TMP=${{ runner.temp }}
 
+        gh auth login --with-token ${{ github.token }}
+
         # Find available versions.
         echo "Available Beaker versions:"
         echo
