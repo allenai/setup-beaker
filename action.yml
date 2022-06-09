@@ -7,6 +7,9 @@ inputs:
   token:
     description: Your Beaker token
     required: true
+  github_token:
+    description: Your GitHub token
+    required: true
   workspace:
     description: The default workspace to use
     required: false
@@ -24,7 +27,7 @@ runs:
 
         mkdir -p "$HOME/bin"
         TMP=${{ runner.temp }}
-        echo ${{ secrets.GITHUB_TOKEN }} | gh auth login --with-token
+        echo ${{ inputs.github_token }} | gh auth login --with-token
 
         # Find available versions.
         echo "Available Beaker versions:"
