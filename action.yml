@@ -84,6 +84,7 @@ runs:
 
         # Setup 'account' output.
         account=$(beaker account whoami --format=json | jq -r '.[0].name')
+        echo "$account"
         echo "::set-output name=account::$account"
 
     - name: Print useful config info
