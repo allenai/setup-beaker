@@ -20,12 +20,11 @@ runs:
     - name: Install Beaker client
       shell: bash
       run: |
-        set -euo pipefail
+        set -euxo pipefail
 
         mkdir -p "$HOME/bin"
         TMP=${{ runner.temp }}
-
-        gh auth login --with-token ${{ github.token }}
+        GITHUB_TOKEN=${{ github.token }}
 
         # Find available versions.
         echo "Available Beaker versions:"
