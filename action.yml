@@ -23,6 +23,7 @@ runs:
         set -euo pipefail
 
         mkdir -p "$HOME/bin"
+        TMP=${{ runner.temp }}
 
         # Find available versions.
         echo "Available Beaker versions:"
