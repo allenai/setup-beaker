@@ -32,7 +32,7 @@ runs:
         # Find available versions.
         echo "Available Beaker versions:"
         echo
-        gh api /repos/allenai/beaker/deployments | jq -cr '[.[] | select(.production_environment)][] | [.ref, .created_at] | @tsv' > $TMP/beaker-versions.txt
+        gh api /repos/allenai/beaker/deployments | jq -cr '[.[] | select(.environment=="production")][] | [.ref, .created_at] | @tsv' > $TMP/beaker-versions.txt
         cat $TMP/beaker-versions.txt | awk '{printf("%-15s %s\n", $1, $2)}'
 
         VERSION=$(head -1 $TMP/beaker-versions.txt | awk '{print $1}')
