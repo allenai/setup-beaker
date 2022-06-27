@@ -32,7 +32,7 @@ runs:
         # Find available versions.
         echo "Available Beaker versions:"
         echo
-        gh api /repos/allenai/beaker-service/deployments | jq -cr '[.[] | select(.production_environment)][] | [.ref, .created_at] | @tsv' > $TMP/beaker-versions.txt
+        gh api /repos/allenai/beaker/deployments | jq -cr '[.[] | select(.production_environment)][] | [.ref, .created_at] | @tsv' > $TMP/beaker-versions.txt
         cat $TMP/beaker-versions.txt | awk '{printf("%-15s %s\n", $1, $2)}'
 
         VERSION=$(head -1 $TMP/beaker-versions.txt | awk '{print $1}')
@@ -61,7 +61,7 @@ runs:
 
         # Download the release.
         mkdir $TMP/assets/
-        gh --repo allenai/beaker-service release download -p $PATTERN -D $TMP/assets/ $VERSION
+        gh --repo allenai/beaker release download -p $PATTERN -D $TMP/assets/ $VERSION
         tar -C $HOME/bin -zxf $TMP/assets/*.tar.gz
 
         # Add to path.
