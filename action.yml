@@ -28,12 +28,13 @@ runs:
         VERSION=$(curl --silent https://beaker.org/api/v3/release | jq -r '.version')
         echo Downloading Beaker CLI version $VERSION.
 
-        ARCH=$(uname -p)
+        # uname -m, not -p: uutils coreutils (Ubuntu 26.04+) prints "unknown" for -p.
+        ARCH=$(uname -m)
         OS=$(uname -s)
-        if [[ $ARCH == "arm" && $OS == "Darwin" ]]; then
+        if [[ $ARCH == "arm64" && $OS == "Darwin" ]]; then
           # macOS on M1 chipsets
           ARCH=arm64; OS=darwin
-        elif [[ $ARCH == "i386" && $OS == "Darwin" ]]; then
+        elif [[ $ARCH == "x86_64" && $OS == "Darwin" ]]; then
           # macOS on Intel chipsets
           ARCH=amd64; OS=darwin
         elif [[ $ARCH == "x86_64" && $OS == "Linux" ]]; then
